@@ -36,12 +36,9 @@ COPY --from=build --chown=appuser:appgroup /src/extracted/application/ ./
 
 USER appuser:appgroup
 
-# Health check that calls the hello controller endpoint
+# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
     CMD curl -f http://localhost:8080/hello || exit 1
 
-# Run the extracted application JAR (which contains the JarLauncher)
-ENTRYPOINT ["java", \
-    "-XX:+UseContainerSupport", \
-    "-XX:MaxRAMPercentage=75.0", \
-    "-jar", "springbootapi-0.0.1-SNAPSHOT.jar"]
+# Use wildcard for JAR name to avoid version sync issues
+ENTRYPOINT ["sh", "-c", "java -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -jar *.jar"]
