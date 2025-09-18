@@ -1,0 +1,40 @@
+# Ignorar todo el contenido del directorio .git
+.git/
+
+# Ignorar carpetas de build y dependencias
+build/
+!build/libs/*.jar
+.gradle/
+bin/
+out/
+target/
+
+# Ignorar archivos de configuración local
+application-dev.properties
+application-local.properties
+application-test.properties
+
+# Ignorar archivos de logs y temporales
+*.log
+*.tmp
+*.temp
+logs/
+
+# Ignorar archivos de IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Ignorar archivos de testing
+**/test-results/
+**/coverage/
+
+# Ignorar archivos de Docker Compose
+docker-compose.override.yml
+
+# Ignorar archivos de documentación
+README.md
+HELP.md
+*.md
