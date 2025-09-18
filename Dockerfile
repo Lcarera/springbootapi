@@ -1,8 +1,13 @@
 FROM eclipse-temurin:24-jre-alpine AS base
 WORKDIR /app
 EXPOSE 8080
+
+# Set non-root user
 RUN addgroup -g 1001 -S appgroup && \
     adduser -u 1001 -S appuser -G appgroup
+
+# Install curl for health check
+RUN apk add --no-cache curl
 
 FROM gradle:8-jdk-21-and-24-corretto AS build
 WORKDIR /src
@@ -31,8 +36,12 @@ COPY --from=build --chown=appuser:appgroup /src/extracted/application/ ./
 
 USER appuser:appgroup
 
+# Health check that calls the hello controller endpoint
+HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
+    CMD curl -f http://localhost:8080/hello || exit 1
+
 # Run the extracted application JAR (which contains the JarLauncher)
 ENTRYPOINT ["java", \
     "-XX:+UseContainerSupport", \
     "-XX:MaxRAMPercentage=75.0", \
-    "-jar", "wallet-0.0.1-SNAPSHOT.jar"]
+    "-jar", "springbootapi-0.0.1-SNAPSHOT.jar"]
