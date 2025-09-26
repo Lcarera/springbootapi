@@ -10,9 +10,9 @@ terraform {
 }
 
 provider "google" {
-  project = "sprint-deploy-test"
-  region  = "southamerica-west1"
-  zone    = "southamerica-west1-c"
+  project = var.project
+  region = var.region
+  zone    = var.zone
 }
 
 # Enable required APIs
@@ -30,13 +30,13 @@ resource "google_project_service" "container_registry_api" {
 
 # Cloud Run service
 resource "google_cloud_run_service" "springboot_api" {
-  name     = "springboot-api"
-  location = "southamerica-west1"
+  name     = var.service_name
+  location = var.region
 
   template {
     spec {
       containers {
-        image = "gcr.io/sprint-deploy-test/com.gm2dev.springbootapi:1.0.1"
+        image = local.image_name
         
         ports {
           container_port = 8080
@@ -46,7 +46,7 @@ resource "google_cloud_run_service" "springboot_api" {
         resources {
           limits = {
             cpu    = "1000m"
-            memory = "512Mi"
+            memory = "1Gi"
           }
         }
         
