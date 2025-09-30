@@ -23,7 +23,7 @@ MEMORY="1Gi"
 CPU="1"
 TIMEOUT="600"
 ALLOW_UNAUTHENTICATED=true
-
+ENV_VARS="SPRING_PROFILES_ACTIVE=prod"
 # Extract project name and group from Gradle files
 PROJECT_NAME=""
 GROUP=""
@@ -43,6 +43,7 @@ show_usage() {
     echo "  -c CPU            CPU allocation (default: 1)"
     echo "  -t TIMEOUT        Request timeout in seconds (default: 600)"
     echo "  --no-auth         Disable unauthenticated access (default: allow unauthenticated)"
+    echo "  -e ENV_VARS       Environment variables (default: SPRING_PROFILES_ACTIVE=prod)"
     echo "  -h                Show this help message"
     echo ""
     echo "Examples:"
@@ -50,6 +51,7 @@ show_usage() {
     echo "  $0 -s my-api                              # Custom service name"
     echo "  $0 -i gcr.io/my-project/app:1.0.0         # Custom image"
     echo "  $0 -r us-central1 -m 2Gi -c 2             # Custom region and resources"
+    echo "  $0 -e SPRING_PROFILES_ACTIVE=prod         # Custom environment variables"
     echo ""
     echo "Default image format: gcr.io/PROJECT_ID/group.projectname:latest"
     echo "Note: Requires gcloud to be configured with a project."
@@ -171,6 +173,7 @@ DEPLOY_CMD+=" --port ${PORT}"
 DEPLOY_CMD+=" --memory ${MEMORY}"
 DEPLOY_CMD+=" --cpu ${CPU}"
 DEPLOY_CMD+=" --timeout ${TIMEOUT}"
+DEPLOY_CMD+=" --set-env-vars ${ENV_VARS}"
 
 if [ "$ALLOW_UNAUTHENTICATED" = true ]; then
     DEPLOY_CMD+=" --allow-unauthenticated"
