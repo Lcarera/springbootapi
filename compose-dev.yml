@@ -1,0 +1,24 @@
+# Development Docker Compose file
+# This file contains only the database service for local development
+# Spring Boot will automatically discover and manage this when running with 'dev' profile
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    user: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=springbootapi
+      - POSTGRES_PASSWORD=mySecurePassword123
+    ports:
+      - "5432:5432"  # Expose port for local development
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data:
